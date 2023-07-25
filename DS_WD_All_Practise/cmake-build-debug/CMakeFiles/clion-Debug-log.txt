@@ -1,0 +1,1 @@
+"D:\Toolbox APP\apps\CLion\ch-0\232.8660.139\bin\cmake\win\x64\bin\cmake.exe" -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - MinGW Makefiles" -S D:\桌面\考研\考研专业课\Data_Structure\DS_WD_All_Practise -B D:\桌面\考研\考研专业课\Data_Structure\DS_WD_All_Practise\cmake-build-debug
