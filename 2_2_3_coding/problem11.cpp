@@ -21,6 +21,7 @@ struct Sqlist
 void Print(Sqlist *q);
 Sqlist* Init_sqlist(int a[], int l);
 int find_middle(Sqlist *p, Sqlist *q);
+int M_seach(int a[], int b[], int n); // 解法2时间复杂度O(logn) 空间复杂度O(1)王道书解法
 
 int main()
 {
@@ -35,6 +36,7 @@ int main()
     puts("");
     int middle = find_middle(sqlistA, sqlistB);
     cout << middle << endl;
+    cout << M_seach(a, b, len1) << endl;
     return 0;
 }
 
@@ -70,6 +72,45 @@ int find_middle(Sqlist *p, Sqlist *q)
             ++ j;
         }
     }
+}
+
+int M_seach(int a[], int b[], int n)
+{
+    int l1 = 0, l2 = 0, r1 = n - 1, r2 = n - 1;
+    while(l1 != r1 || l2 != r2)
+    {
+        int m1 = (l1 + r1) / 2;
+        int m2 = (l2 + r2) / 2;
+        if (a[m1] == b[m2])
+            return a[m1];
+        if (a[m1] < b[m2])
+        {
+            if ((l1 + r1) % 2 == 0)
+            {
+                l1 = m1;
+                r2 = m2;
+            }
+            else
+            {
+                l1 = m1 + 1;
+                r2 = m2;
+            }
+        }
+        else
+        {
+            if ((l2 + r2) % 2 == 0)
+            {
+                l2 = m2;
+                r1 = m1;
+            }
+            else
+            {
+                r1 = m1;
+                l2 = m2 + 1;
+            }
+        }
+    }
+    return a[l1] < b[l2] ? a[l1] : b[l2];
 }
 
 void Print(Sqlist *q)
