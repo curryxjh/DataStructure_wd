@@ -63,13 +63,13 @@ bool Del_val(SqlList *s, int l, int r)
 {
     if ((l > r) || !s->length)
         return false;
-    int first_max = 0, first_less = 0;
-    for (first_max; s->data[first_max] < l; ++ first_max);
-    if (first_max > s->length)
+    int head_max = 0, head_less = 0;
+    for (head_max; s->data[head_max] < l; ++ head_max);
+    if (head_max > s->length)
         return false;
-    for (first_less = first_max; first_less < s->length && s->data[first_less] <= r; ++ first_less);
-    for (; first_less < s->length; ++ first_less)
-        s->data[first_max++] = s->data[first_less];
-    s->length = first_max;
+    for (head_less = head_max; head_less < s->length && s->data[head_less] <= r; ++ head_less);
+    for (; head_less < s->length; ++ head_less)
+        s->data[head_max++] = s->data[head_less];
+    s->length = head_max;
     return true;
 }
