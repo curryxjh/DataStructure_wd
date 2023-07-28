@@ -1,5 +1,5 @@
 /*
- * p02
+ * p03
  */
 
 #include <iostream>
@@ -17,50 +17,38 @@ struct HeaderList
 
 bool Init(HeaderList* L); // 初始化单链表
 bool Insert(HeaderList* L, int i, int x); // 在ai之后插入一个新元素
-bool Delete(HeaderList* L, Node* node); // 删除对应指针指向的节点
 bool Print(HeaderList* L); // 输出
 bool Destory(HeaderList* L); // 销毁单链表
-void Dele_val_x(HeaderList* L, Node* LN, int x); // 递归解法
-void Dele_val_x(HeaderList* L, int x); // 非递归解法
+void Print_Verse(HeaderList* L);
 
 int main()
 {
     HeaderList* headerList = new HeaderList;
     Init(headerList);
-    Insert(headerList, -1, 4);
     Insert(headerList, -1, 2);
     Insert(headerList, -1, 27);
     Insert(headerList, -1, 3);
     Insert(headerList, -1, 4);
-    Insert(headerList, -1, 4);
-    Insert(headerList, -1, 4);
     Insert(headerList, -1, 5);
-    Insert(headerList, -1, 4);
     Print(headerList);
-    Dele_val_x(headerList, headerList->head->link, 4);
-    Print(headerList);
+    Print_Verse(headerList);
+
     return 0;
 }
 
-void Dele_val_x(HeaderList* L, Node* LN, int x)
+void Print_Verse(HeaderList* L)
 {
-    Node* p;
-    if (! LN)
-        return;
-    if (LN->element == x)
+    int *a = new int[L->length + 1];
+    int idx = 0;
+    Node* p = L->head->link;
+    while (p)
     {
-        p = LN;
-        LN = LN->link;
-        Delete(L, p);
-        Dele_val_x(L, LN, x);
+        a[idx ++] = p->element;
+        p = p->link;
     }
-    else
-        Dele_val_x(L, LN->link, x);
-}
-// todo 非递归解法
-void Dele_val_x(HeaderList* L, int x)
-{
-
+    for (int i = idx - 1; ~i; --i)
+        cout << a[i] << " ";
+    puts("");
 }
 
 bool Init(HeaderList* L)
@@ -86,23 +74,6 @@ bool Insert(HeaderList* L, int i, int x)
     p->link = q;
     ++ L->length;
     return true;
-}
-
-bool Delete(HeaderList* L, Node* node)
-{
-    Node* p = L->head;
-    bool flag = false;
-    Node* tmp;
-    while (p->link != node)
-        p = p->link;
-    if (p)
-    {
-        tmp = p->link;
-        p->link = tmp->link;
-        flag = true;
-    }
-    free(tmp);
-    return flag;
 }
 
 bool Print(HeaderList* L)
