@@ -37,6 +37,7 @@ int main()
     Print(singleList);
     Dele_val_x(singleList, singleList->first, 5);
     Print(singleList);
+    Destory(singleList);
     return 0;
 }
 
