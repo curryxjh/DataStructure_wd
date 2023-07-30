@@ -1,5 +1,5 @@
 /*
- * p06
+ * p07
  */
 
 #include <iostream>
@@ -15,11 +15,11 @@ struct HeaderList
     int length;
 };
 
-bool Init(HeaderList* L); // 鍒濆鍖栧崟閾捐〃
-bool Insert(HeaderList* L, int i, int x); // 鍦╝i涔嬪悗鎻掑叆涓�涓柊鍏冪礌
-bool Print(HeaderList* L); // 杈撳嚭
-bool Destory(HeaderList* L); // 閿�姣佸崟閾捐〃
-bool Sort_list(HeaderList* L);
+bool Init(HeaderList* L); // 初始化单链表
+bool Insert(HeaderList* L, int i, int x); // 在ai之后插入一个新元素
+bool Print(HeaderList* L); // 输出
+bool Destory(HeaderList* L); // 销毁单链表
+bool Delete_val(HeaderList* L, int l, int r);
 
 int main()
 {
@@ -32,27 +32,34 @@ int main()
     Insert(headerList, -1, 4);
     Insert(headerList, -1, 5);
     Print(headerList);
-    Sort_list(headerList);
+    int l, r;
+    cout << "删除元素区间范围: ";
+    cin >> l >> r;
+    Delete_val(headerList, l, r);
     Print(headerList);
     return 0;
 }
 
-bool Sort_list(HeaderList* L)
+bool Delete_val(HeaderList* L, int l, int r)
 {
     if (! L->length)
         return false;
-    Node* q = L->head->link;
-    L->head->link = NULL;
-    Node* p, *move;
-    while (q != NULL)
+    Node* p = L->head->link;
+    Node* q = L->head;
+    while (p)
     {
-        p = q->link;
-        move = L->head;
-        while (move->link != NULL && move->link->element < q->element)
-            move = move->link;
-        q->link = move->link;
-        move->link = q;
-        q = p;
+        if (p->element >= l && p->element <= r)
+        {
+            Node* tmp = p;
+            q->link = p->link;
+            p = q->link;
+            free(tmp);
+        }
+        else
+        {
+            q = p;
+            p = p->link;
+        }
     }
     return true;
 }
