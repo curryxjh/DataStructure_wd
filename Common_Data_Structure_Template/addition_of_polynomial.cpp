@@ -21,11 +21,12 @@ bool Print(Ploy* L);
 
 int main()
 {
-    Ploy* p, * q;
+    Ploy* p = new Ploy;
+    Ploy* q = new Ploy;
     Create(p);
     Create(q);
     Add(p, q);
-
+    Print(q);
     return 0;
 }
 
@@ -56,9 +57,48 @@ void Create(Ploy* p)
     }
 }
 
-void Add(Ploy* p, Ploy* q)
+void Add(Ploy* pploy, Ploy* qploy)
 {
-
+    Node* q, *q1 = qploy->head, *p;
+    Node* tmp;
+    q = q1->link;
+    p = pploy->head->link;
+    while (p->exp >= 0)
+    {
+        while (q->exp > p->exp)
+        {
+            q1 = q;
+            q = q->link;
+        }
+        if (q->exp == p->exp)
+        {
+            q->coef += p->coef;
+            if (! q->coef)
+            {
+                q1 ->link = q->link;
+                Node* t = q;
+                q = q1->link;
+                p = p->link;
+                delete t;
+            }
+            else
+            {
+                q1 = q;
+                q = q->link;
+                p = p->link;
+            }
+        }
+        else if (q->exp < p->exp)
+        {
+            tmp = new Node;
+            tmp->coef = p->coef;
+            tmp->exp = p->exp;
+            tmp->link = q1->link;
+            q1->link = tmp;
+            q1 = q1->link;
+            p = p->link;
+        }
+    }
 }
 
 
@@ -68,9 +108,9 @@ bool Print(Ploy* L)
     if (!L->head)
         return false;
     p = L->head->link;
-    while(p)
+    while(p != L->head)
     {
-        if(p->link)
+        if(p->link != L->head)
             std::cout << p->coef << "x^" << p->exp  << "+";
         else
             std::cout << p->coef << "x^" << p->exp;
