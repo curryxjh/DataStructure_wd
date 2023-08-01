@@ -18,6 +18,7 @@ struct HeaderList
 bool Init(HeaderList* L); // 初始化单链表
 bool Insert(HeaderList* L, int i, int x); // 在ai之后插入一个新元素
 void Sort_Print(HeaderList* L);
+bool Print(HeaderList* L); // 输出
 
 int main()
 {
@@ -29,6 +30,7 @@ int main()
     Insert(headerList, -1, 3);
     Insert(headerList, -1, 4);
     Insert(headerList, -1, 5);
+    Print(headerList);
     Sort_Print(headerList);
     return 0;
 }
@@ -63,6 +65,36 @@ void Sort_Print(HeaderList* L)
 {
     while (L->head->link)
     {
-        // todo finish this
+        Node *p = L->head->link;
+        Node *pre = L->head;
+        Node *del;
+        int idx = 1;
+        while (p->link)
+        {
+            if (pre->link->element > p->link->element)
+                pre = p;
+            p = p->link;
+        }
+        cout << pre->link->element << " ";
+        del = pre->link;
+        pre->link = del->link;
+        free(del);
     }
+    free(L->head);
+}
+
+
+bool Print(HeaderList* L)
+{
+    Node* p;
+    if (!L->length)
+        return false;
+    p = L->head->link;
+    while(p)
+    {
+        cout << p->element << " ";
+        p = p->link;
+    }
+    puts("");
+    return true;
 }
