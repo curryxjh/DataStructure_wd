@@ -1,5 +1,5 @@
 /*
- * p13
+ * p14
  */
 
 #include <iostream>
@@ -19,7 +19,7 @@ bool Init(HeaderList* L); // 初始化单链表
 HeaderList* buildList(int a[], int n); //依据一个数组的元素创建链表
 bool Print(HeaderList* L); // 输出
 bool Destory(HeaderList* L); // 销毁单链表
-HeaderList* Merge_Decline(HeaderList*& L1, HeaderList*& L2);
+HeaderList* Create_common(HeaderList*& L1, HeaderList*& L2);
 int a[] = {1, 4, 7, 8, 9,11};
 int b[] = {2, 4, 5, 6, 7, 8};
 
@@ -29,12 +29,12 @@ int main()
     HeaderList* l2 = buildList(b, sizeof b / 4);
     Print(l1);
     Print(l2);
-    HeaderList* ans = Merge_Decline(l1, l2);
+    HeaderList* ans = Create_common(l1, l2);
     Print(ans);
     return 0;
 }
 
-HeaderList* Merge_Decline(HeaderList*& L1, HeaderList*& L2)
+HeaderList* Create_common(HeaderList*& L1, HeaderList*& L2)
 {
     HeaderList* L = new HeaderList;
     Init(L);
@@ -42,33 +42,19 @@ HeaderList* Merge_Decline(HeaderList*& L1, HeaderList*& L2)
     Node* q = L2->head->link;
     while (p && q)
     {
-        Node* pne = p->link, *qne = q->link;
-        if (p->element < q->element)
+        if (p->element == q->element)
         {
-            p->link = L->head->link;
-            L->head->link = p;
-            p = pne;
+            Node* node = new Node;
+            node->element = p->element;
+            node->link = L->head->link;
+            L->head->link = node;
+            p = p->link;
+            q = q->link;
         }
+        else if (p->element < q->element)
+            p = p->link;
         else
-        {
-            q->link = L->head->link;
-            L->head->link = q;
-            q = qne;
-        }
-    }
-    while (p)
-    {
-        Node* tmp = p;
-        p = p->link;
-        tmp->link = L->head->link;
-        L->head->link = tmp;
-    }
-    while (q)
-    {
-        Node* tmp = q;
-        q = q->link;
-        tmp->link = L->head->link;
-        L->head->link = tmp;
+            q = q->link;
     }
     return L;
 }
@@ -123,4 +109,5 @@ bool Destory(HeaderList* L)
         free(L->head);
         L->head = p;
     }
+    return true;
 }
