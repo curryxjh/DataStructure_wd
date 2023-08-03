@@ -1,5 +1,5 @@
 /*
- * p18
+ * p19
  */
 
 #include <iostream>
@@ -16,34 +16,44 @@ struct HeaderList
 };
 void Print(HeaderList* L);
 bool Init(HeaderList* L);
-void Merge(HeaderList* l1, HeaderList* l2);
+void Find_min(HeaderList* L);
 HeaderList* BuildList(int a[], int n);
 
-int a[] = {1, 2, 3, 4, 5, 4, 3, 2, 1};
-int b[] = {3, 1, 2, 3, 5};
+int a[] = {4, 6, 3, 9, 5, 4, 15, 2, 1};
+
 int main()
 {
     HeaderList* L1 = BuildList(a, sizeof a / 4);
     Print(L1);
-    HeaderList* L2 = BuildList(b, sizeof b / 4);
-    Print(L2);
-    Merge(L1, L2);
-    Print(L1);
+    Find_min(L1);
     return 0;
 }
 
-void Merge(HeaderList* l1, HeaderList* l2)
+void Find_min(HeaderList* L)
 {
-    Node* p = l1->head->link;
-    Node* q = l2->head->link;
-    while (p->link != l1->head)
-        p = p->link;
-    while (q->link != l2->head)
-        q = q->link;
-    p->link = l2->head->link;
-    q->link = l1->head;
+    Node* p = L->head->link;
+    Node* pre = L->head;
+    while (L->head->link != L->head)
+    {
+        p = L->head->link;
+        pre = L->head;
+        Node* minval = L->head->link;
+        Node* minpre = L->head;
+        while (p != L->head)
+        {
+            if (p->element < minval->element)
+            {
+                minval = p;
+                minpre = pre;
+            }
+            pre = p;
+            p = p->link;
+        }
+        cout << minval->element << endl;
+        minpre->link = minval->link;
+        free(minval);
+    }
 }
-
 
 bool Init(HeaderList* L)
 {
