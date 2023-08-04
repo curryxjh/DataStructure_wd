@@ -1,12 +1,13 @@
 /*
- * p08
+ * p23
+ * 和p8一样的思路
  */
 
 #include <iostream>
 using namespace std;
 struct Node
 {
-    int element;
+    char element;
     Node* link;
 };
 struct HeaderList
@@ -16,17 +17,17 @@ struct HeaderList
 };
 
 bool Init(HeaderList* L); // 初始化单链表
-HeaderList* buildList(int a[], int n); //依据一个数组的元素创建链表
+HeaderList* buildList(string s, int n); //依据一个数组的元素创建链表
 bool Print(HeaderList* L); // 输出
 bool Destory(HeaderList* L); // 销毁单链表
 Node* Common_node(HeaderList* L1, HeaderList* L2);
-int a[] = {3, 4, 1, 6, 7, 8};
-int b[] = {9, 1, 6, 7, 8};
+string a = "loading";
+string b = "being";
 
 int main()
 {
-    HeaderList* L1 = buildList(a, sizeof a / 4);
-    HeaderList* L2 = buildList(b, sizeof b / 4);
+    HeaderList* L1 = buildList(a, a.length());
+    HeaderList* L2 = buildList(b, b.length());
     Print(L1);
     Print(L2);
     Node* node = Common_node(L1, L2);
@@ -41,14 +42,14 @@ int main()
     return 0;
 }
 
-HeaderList* buildList(int a[], int n)
+HeaderList* buildList(string s, int n)
 {
     HeaderList* L = new HeaderList;
     Init(L);
     for (int i = 0; i < n; ++ i)
     {
         Node* node = new Node;
-        node->element = a[i];
+        node->element = s[i];
         Node* p = L->head;
         while (p->link)
             p = p->link;
