@@ -22,8 +22,6 @@ HeaderList* buildList(int a[], int n); //依据一个数组的元素创建链表
 bool Print(HeaderList* L); // 输出
 void Del_list_abs_val(HeaderList* L, int n);
 int a[] = {-3, 4, -1, 6, 7, 1, 8, 3};
-const int N = 10;
-int b[N];
 
 int main()
 {
