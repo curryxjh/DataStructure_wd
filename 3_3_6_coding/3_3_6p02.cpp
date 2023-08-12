@@ -1,9 +1,6 @@
 /*
  * p02
  */
-/*
- * p01
- */
 #include <iostream>
 #include <cstring>
 #include <cstdio>
