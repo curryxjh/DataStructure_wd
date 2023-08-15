@@ -22,7 +22,7 @@ bool Pop(SqStack &s, ElemType &x);
 int main()
 {
     SqStack s;
-    Init(s, 10);
+    Init(s, 100);
     if (IsEmpty(s))
         cout << "Õ»¿Õ" << endl;
     Push(s, 10);

@@ -2,7 +2,7 @@
  * 队列
  */
 #include <iostream>
-#define MaxSize 10
+#define MaxSize 1000
 using namespace std;
 typedef int ElemType;
 struct SqQueue
