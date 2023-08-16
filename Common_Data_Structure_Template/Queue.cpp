@@ -25,7 +25,7 @@ int main()
 
 void Init(SqQueue &q)
 {
-    q.front = q.front = 0;
+    q.front = q.rear = 0;
     q.data = new ElemType[MaxSize];
 }
 
