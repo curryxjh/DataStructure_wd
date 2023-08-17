@@ -1,0 +1,2505 @@
+//单链表的实现
+#include <iostream>
+using namespace std;
+
+template <class T>
+struct node
+{
+	T data;
+	node *next;
+};
+
+template <class T>
+struct LinkedList
+{
+	node<T> *List;
+	int listsize;
+	LinkedList();//构造函数创建链表
+	~LinkedList();//析构函数撤销链表
+	void insert(node<T> *&p);//插入节点
+	bool remove(node<T> *&p);//删除节点
+	void print();//输出整个链表
+	bool find(node<T> *&p);
+	bool Empty();//判断是否为空
+	int Size();//得到链表中元素个数
+};
+
+int main()
+{
+	int section;
+	puts("请输入选择操作的序号");
+	cout << "1.插入元素" << endl;
+	cout << "2.删除元素" << endl;
+	cout << "3.输出链表中所有元素" << endl;
+	cout << "4.链表是否为空" << endl;
+	cout << "5.查找" << endl;
+	cout << "6.输出链表长度" << endl;
+	cout << "7.撤销链表" << endl;
+	LinkedList<int> linkedlist;
+	while (true)
+	{
+		cin >> section;
+		switch (section)
+		{
+		case 1:
+		{
+			node<int>* p = new node<int>;
+			cout << "请输入节点存储的信息 ：";
+			cin >> p->data;
+			linkedlist.insert(p);
+			break;
+		}
+		case 2:
+		{
+			node<int>* p = new node<int>;
+			cout << "请输入需要删除的节点信息" << endl;
+			cin >> p->data;
+			if (linkedlist.remove(p))
+				puts("删除成功");
+			else
+				puts("没有这个元素存在");
+			break;
+		}
+		case 3:
+		{
+			linkedlist.print();
+			break;
+		}
+		case 4:
+		{
+			if (linkedlist.Empty())
+				cout << "链表为空" << endl;
+			else
+				cout << "链表非空" << endl;
+			break;
+		}
+		case 5:
+		{
+			node<int>* p = new node<int>;
+			cout << "请输入需要查找节点的信息" << endl;
+			cin >> p->data;
+			if (linkedlist.find(p))
+				puts("查找成功");
+			else
+				puts("查找不成功");
+			break;
+		}
+		case 6:
+		{
+			cout << "链表长度为：" << linkedlist.listsize << endl;
+			break;
+		}
+		case 7:exit(0);
+		}
+		puts("请输入选择操作的序号");
+	}
+	return 0;
+}
+
+template <class T>
+LinkedList<T>::LinkedList()
+{
+	node<T> *headNode = new node<T>;
+	headNode-> data = 0;
+	headNode->next = nullptr;
+	List = headNode;
+	listsize = 0;
+}
+
+template <class T>
+LinkedList<T>::~LinkedList()
+{
+	if (List != nullptr)
+	{
+		while (List != nullptr)
+		{
+			node<T>* p = List;
+			List = List->next;
+			delete p;
+		}
+	}
+}
+
+template <class T>
+void LinkedList<T>::insert(node<T> *&p)//采取头插法
+{
+	if (List->next == nullptr)
+	{
+		List->next = p;
+		p->next = nullptr;
+	}
+	else
+	{
+		p->next = List->next;
+		List->next = p;
+	}
+	++listsize;
+}
+
+template <class T>
+bool LinkedList<T>::remove(node<T> *&p)
+{
+	node<T> *q = List->next;
+	for (q; q!= nullptr; q = q->next)
+	{
+		if (q->data == p->data)
+		{
+			node<T> *temp = q->next;
+			q->next = q->next->next;
+			delete temp;
+			--listsize;
+			return true;
+		}
+	}
+	return false;
+}
+
+template <class T>
+void LinkedList<T>::print()
+{
+	if (!listsize)
+		puts("链表中没有元素");
+	node<T>* p = List->next;
+	for (p; p!= nullptr; p = p->next)
+	{
+		cout << p->data << " ";
+	}
+	puts("");
+}
+
+template <class T>
+bool LinkedList<T>::find(node<T>*& p)
+{
+	node<T>* q = List->next;
+	for (q; q != nullptr; q = q->next)
+	{
+		if (q->data == p->data)
+			return true;
+	}
+	return false;
+}
+
+template <class T>
+bool LinkedList<T>::Empty()
+{
+	if (listsize)
+		return false;
+	else
+		return true;
+}
+
+template <class T>
+int LinkedList<T>::Size()
+{
+	return listsize;
+}
+
+
+
+————————————————————————————————————————————————————————————————————
+链表求解约瑟夫
+
+#include <iostream>
+using namespace std;
+struct node
+{
+	int data;
+	node* next;
+};
+struct LinkList
+{
+	node* head;
+	node* end;
+	int len;
+	LinkList();
+	void insert(node*& p);
+};
+int main()
+{
+	int n, k;
+	cout << "请输入个数" << endl;
+	cin >> n >> k;
+	LinkList List;
+	for (int i = 1; i <= n; ++i)
+	{
+		node* p = new node;
+		p->data = i;
+		List.insert(p);
+	}
+	node* q = List.head;
+	while (q->next != q)
+	{
+		for (int i = 1; i < k - 1; ++i)
+		{
+			q = q->next;
+		}
+		node* temp = q->next;
+		cout << temp->data << endl;
+		q->next = q->next->next;
+		delete temp;
+		--List.len;
+		q = q->next;
+	}
+	cout << "胜出者编号为：" << q->data << endl;
+
+	return 0;
+}
+
+LinkList::LinkList()
+{
+	head = end = nullptr;
+	len = 0;
+}
+
+void LinkList::insert(node*& p)
+{
+	if (!len)
+	{
+		head = p;
+		end = p;
+		p->next = p;
+	}
+	else
+	{
+		end->next = p;
+		end = p;
+		p->next = head;
+	}
+	++len;
+}
+
+——————————————————————————————————————————————————————————————
+栈判断回文
+#include <iostream>
+#include <cstring>
+#include <stdio.h>
+using namespace std;
+const int N = 1010;
+
+template <class T>
+class node
+{
+	template <class T> friend class Stack;
+	public:
+		node(T e);
+	private:
+		T data;
+		node<T> *next;
+};
+template <class T>
+class Stack
+{
+	public:
+		Stack();
+		void Push(node<T> *&t);
+		T Top();
+		bool pop();
+		bool Empty();
+	private:
+		node<T> *ListStack;
+};
+int Length(char* ch);
+
+int main()
+{
+	char str[N];
+	gets_s(str);
+	Stack<char> s;
+	int len = Length(str);
+	for (int i = 0; i < len; ++i)
+	{
+		if (str[i] != ' ')
+		{
+			node<char>* p = new node<char>(str[i]);
+			s.Push(p);
+		}
+	}
+	bool flag = true;
+	for (int i = 0; i < len; ++i)
+	{
+		if (str[i] != s.Top())
+		{
+			flag = false;
+			break;
+		}
+		s.pop();
+	}
+	if (flag)
+		cout << "是回文串" << endl;
+	else
+		cout << "不是回文串" << endl;
+	return 0;
+}
+
+template <class T>
+node<T>::node(T e)
+{
+	data = e;
+}
+
+template <class T>
+Stack<T>::Stack()
+{
+	ListStack = nullptr;
+}
+
+template <class T>
+void Stack<T>::Push(node<T>*& t)
+{
+	if (ListStack == nullptr)
+	{
+		ListStack = t;
+		t->next = nullptr;
+	}
+	else
+	{
+		t->next = ListStack;
+		ListStack = t;
+	}
+}
+
+template <class T>
+T Stack<T>::Top()
+{
+	if (ListStack != nullptr)
+		return ListStack->data;
+}
+
+template <class T>
+bool Stack<T>::pop()
+{
+	if (ListStack != nullptr)
+	{
+		node<T>* temp = ListStack;
+		ListStack = temp->next;
+		delete temp;
+		return true;
+	}
+	else
+		return false;
+}
+
+template <class T>
+bool Stack<T>::Empty()
+{
+	if (ListStack != nullptr)
+		return false;
+	else
+		return true;
+}
+
+int Length(char* ch)
+{
+	int len = 0;
+	while (*ch!='\0')
+	{
+		++len;
+		++ch;
+	}
+	return len;
+}
+
+——————————————————————————————————————————————————————————————————
+链式队列
+#include <iostream>
+using namespace std;
+
+template <class T>
+class node
+{
+	public:
+		node<T>(T e);
+		template <class T> friend class Queue;
+	private:
+		T data;
+		node<T> *next;
+};
+
+template <class T>
+class Queue
+{
+	public:
+		Queue<T>();
+		void Push(node<T> *& t);
+		bool Pop();
+		bool Empty();
+		T Front();
+	private:
+		node<T> *ListQueue;
+};
+void show();
+
+int main()
+{
+	Queue<int> que;
+	int section;
+	while(1)
+	{
+		show();
+		cin >> section;
+		if (section == 1)
+		{
+			cout << "请输入需要存储的值" << endl;
+			int value;
+			cin >> value;
+			node<int>* t = new node<int>(value);
+			que.Push(t);
+		}
+		else if (section == 2)
+		{
+			if (que.Pop())
+				cout << "出队成功" << endl;
+			else
+				cout << "出队失败" << endl;
+		}
+		else if (section == 3)
+		{
+			if (que.Empty())
+				cout << "队列为空" << endl;
+			else
+				cout << "队列非空" << endl;
+		}
+		else if (section == 4)
+		{
+			cout << "队首元素为：";
+			cout << que.Front() << endl;
+		}
+		else if(section==5)
+			exit(0);
+	}
+	return 0;
+}
+
+template <class T>
+node<T>::node<T>(T e)
+{
+	data = e;
+	next = nullptr;
+}
+
+template <class T>
+Queue<T>::Queue<T>()
+{
+	ListQueue = nullptr;
+}
+
+template <class T>
+void Queue<T>::Push(node<T>*& t)
+{
+	if (ListQueue == nullptr)
+	{
+		ListQueue = t;
+		t->next = nullptr;
+	}
+	else
+	{
+		node<T> *p = ListQueue;
+		while (p->next != nullptr)
+		{
+			p = p->next;
+		}
+		p->next = t;
+		t->next = nullptr;
+	}
+}
+
+template <class T>
+bool Queue<T>::Pop()
+{
+	if (ListQueue != nullptr)
+	{
+		node<T> *temp = ListQueue;
+		ListQueue = temp->next;
+		delete temp;
+	}
+	else
+		return false;
+}
+
+template <class T>
+bool Queue<T>::Empty()
+{
+	if (ListQueue == nullptr)
+		return true;
+	else
+		return false;
+}
+template <class T>
+T Queue<T>::Front()
+{
+	if (ListQueue != nullptr)
+		return ListQueue->data;
+}
+
+void show()
+{
+	cout << "请输入你需要进行的操作" << endl;
+	cout << "1.插入元素" << endl;
+	cout << "2.删除元素" << endl;
+	cout << "3.队列是否为空" << endl;
+	cout << "4.获取队首元素" << endl;
+	cout << "5.退出" << endl;
+}
+
+————————————————————————————————————————————————————————————————————
+中缀转后缀
+#include <iostream>
+#include <unordered_map>
+using namespace std;
+const int N = 1010;
+unordered_map<char, int> pt = { {'+',1},{'-',1},{'*',2},{'/',2}};
+template <class T>
+class node
+{
+	template <class T> friend class Stack;
+public:
+	node(T e);
+private:
+	T data;
+	node<T>* next;
+};
+template <class T>
+class Stack
+{
+public:
+	Stack();
+	void Push(node<T>*& t);
+	T Top();
+	bool pop();
+	bool Empty();
+private:
+	node<T>* ListStack;
+};
+int Length(char* ch);
+
+int main()
+{
+	Stack<char> op,num;
+	char exp[N];
+	cin >> exp;
+	int len = Length(exp);
+	for (int i = 0; i < len; ++i)
+	{
+		if (exp[i] == '(')
+		{
+			node<char>* p = new node<char>(exp[i]);
+			op.Push(p);
+		}
+		else if (exp[i] == ')')
+		{
+			while (op.Top() != '(')
+			{
+				node<char>* p = new node<char>(op.Top());
+				num.Push(p);
+				op.pop();
+			}
+			op.pop();
+		}
+		else if (exp[i] >= '0' && exp[i] <= '9')
+		{
+			node<char>* p = new node<char>(exp[i]);
+			num.Push(p);
+		}
+		else
+		{
+			while (!op.Empty() && pt[exp[i]] <= pt[op.Top()])
+			{
+				node<char>* p = new node<char>(op.Top());
+				num.Push(p);
+				op.pop();
+			}
+			node<char>* temp = new node<char>(exp[i]);
+			op.Push(temp);
+		}
+	}
+	while (!op.Empty())
+	{
+		node<char>* p = new node<char>(op.Top());
+		num.Push(p);
+		op.pop();
+	}
+	char res[N];
+	int idx = 0;
+	while (!num.Empty())
+	{
+		char s = num.Top();
+		res[idx++] = s;
+		num.pop();
+	}
+	for (idx=idx-1; idx >= 0; --idx)
+	{
+		cout << res[idx];
+	}
+	return 0;
+}
+
+template <class T>
+node<T>::node(T e)
+{
+	data = e;
+	next = nullptr;
+}
+
+template <class T>
+Stack<T>::Stack()
+{
+	ListStack = nullptr;
+}
+
+template <class T>
+void Stack<T>::Push(node<T>*& t)
+{
+	if (ListStack == nullptr)
+	{
+		ListStack = t;
+		t->next = nullptr;
+	}
+	else
+	{
+		t->next = ListStack;
+		ListStack = t;
+	}
+}
+
+template <class T>
+T Stack<T>::Top()
+{
+	if (ListStack != nullptr)
+		return ListStack->data;
+}
+
+template <class T>
+bool Stack<T>::pop()
+{
+	if (ListStack != nullptr)
+	{
+		node<T>* temp = ListStack;
+		ListStack = temp->next;
+		delete temp;
+		return true;
+	}
+	else
+		return false;
+}
+
+template <class T>
+bool Stack<T>::Empty()
+{
+	if (ListStack != nullptr)
+		return false;
+	else
+		return true;
+}
+
+int Length(char* ch)
+{
+	int len = 0;
+	while (*ch != '\0')
+	{
+		++len;
+		++ch;
+	}
+	return len;
+}
+
+
+
+————————————————————————————————————————————————————————————————
+中缀转后缀，中缀转前缀
+#include <iostream>
+#include <unordered_map>
+using namespace std;
+const int N = 1010;
+unordered_map<char, int> pt = { {'+',1},{'-',1},{'*',2},{'/',2}};
+
+template <class T>
+class node
+{
+	template <class T> friend class Stack;
+public:
+	node(T e);
+private:
+	T data;
+	node<T>* next;
+};
+template <class T>
+class Stack
+{
+public:
+	Stack();
+	void Push(node<T>*& t);
+	T Top();
+	bool pop();
+	bool Empty();
+private:
+	node<T>* ListStack;
+};
+int Length(char* ch);
+
+int main()
+{
+	Stack<char> op,num;
+	char exp[N];
+	cin >> exp;
+	int len = Length(exp);
+	//中缀转前缀
+	for (int i = len - 1; i >= 0; --i)
+	{
+		if (exp[i] >= '0' && exp[i] <= '9')
+		{
+			node<char>* p = new node<char>(exp[i]);
+			num.Push(p);
+		}
+		else if (exp[i] == ')')
+		{
+			node<char>* p = new node<char>(exp[i]);
+			op.Push(p);
+		}
+		else if (exp[i] == '(')
+		{
+			while (op.Top() != ')')
+			{
+				node<char>* p = new node<char>(op.Top());
+				num.Push(p);
+				op.pop();
+			}
+			op.pop();
+		}
+		else
+		{
+			while (!op.Empty() && op.Top() > exp[i])
+			{
+				node<char>* p = new node<char>(op.Top());
+				num.Push(p);
+				op.pop();
+			}
+			node<char>* temp = new node<char>(exp[i]);
+			op.Push(temp);
+		}
+	}
+	while (!op.Empty())
+	{
+		node<char>* p = new node<char>(op.Top());
+		num.Push(p);
+		op.pop();
+	}
+	while (!num.Empty())
+	{
+		cout << num.Top();
+		num.pop();
+	}
+	//中缀转后缀
+	/*
+	Stack<char> op,num;
+	char exp[N];
+	cin >> exp;
+	int len = Length(exp);
+	for (int i = 0; i < len; ++i)
+	{
+		if (exp[i] == '(')
+		{
+			node<char>* p = new node<char>(exp[i]);
+			op.Push(p);
+		}
+		else if (exp[i] == ')')
+		{
+			while (op.Top() != '(')
+			{
+				node<char>* p = new node<char>(op.Top());
+				num.Push(p);
+				op.pop();
+			}
+			op.pop();
+		}
+		else if (exp[i] >= '0' && exp[i] <= '9')
+		{
+			node<char>* p = new node<char>(exp[i]);
+			num.Push(p);
+		}
+		else
+		{
+			while (!op.Empty() && pt[exp[i]] <= pt[op.Top()])
+			{
+				node<char>* p = new node<char>(op.Top());
+				num.Push(p);
+				op.pop();
+			}
+			node<char>* temp = new node<char>(exp[i]);
+			op.Push(temp);
+		}
+	}
+	while (!op.Empty())
+	{
+		node<char>* p = new node<char>(op.Top());
+		num.Push(p);
+		op.pop();
+	}
+	char res[N];
+	int idx = 0;
+	while (!num.Empty())
+	{
+		char s = num.Top();
+		res[idx++] = s;
+		num.pop();
+	}
+	for (idx=idx-1; idx >= 0; --idx)
+	{
+		cout << res[idx];
+	}
+	*/
+	return 0;
+}
+
+template <class T>
+node<T>::node(T e)
+{
+	data = e;
+	next = nullptr;
+}
+
+template <class T>
+Stack<T>::Stack()
+{
+	ListStack = nullptr;
+}
+
+template <class T>
+void Stack<T>::Push(node<T>*& t)
+{
+	if (ListStack == nullptr)
+	{
+		ListStack = t;
+		t->next = nullptr;
+	}
+	else
+	{
+		t->next = ListStack;
+		ListStack = t;
+	}
+}
+
+template <class T>
+T Stack<T>::Top()
+{
+	if (ListStack != nullptr)
+		return ListStack->data;
+}
+
+template <class T>
+bool Stack<T>::pop()
+{
+	if (ListStack != nullptr)
+	{
+		node<T>* temp = ListStack;
+		ListStack = temp->next;
+		delete temp;
+		return true;
+	}
+	else
+		return false;
+}
+
+template <class T>
+bool Stack<T>::Empty()
+{
+	if (ListStack != nullptr)
+		return false;
+	else
+		return true;
+}
+
+int Length(char* ch)
+{
+	int len = 0;
+	while (*ch != '\0')
+	{
+		++len;
+		++ch;
+	}
+	return len;
+}
+
+————————————————————————————————————————————————————————————
+循环队列
+#include <iostream>
+using namespace std;
+
+template <class T>
+class node
+{
+	public:
+		node<T>(T e);
+		template <class T> friend class Queue;
+	private:
+		T data;
+		node<T> *next;
+};
+
+template <class T>
+class Queue
+{
+	public:
+		Queue<T>();
+		void Push(node<T> *& t);
+		bool Pop();
+		bool Empty();
+		T Front();
+	private:
+		node<T> *ListQueue;
+		node<T> *tail;
+};
+void show();
+
+int main()
+{
+	Queue<int> que;
+	int section;
+	while(1)
+	{
+		show();
+		cin >> section;
+		if (section == 1)
+		{
+			cout << "请输入需要存储的值" << endl;
+			int value;
+			cin >> value;
+			node<int>* t = new node<int>(value);
+			que.Push(t);
+		}
+		else if (section == 2)
+		{
+			if (que.Pop())
+				cout << "出队成功" << endl;
+			else
+				cout << "出队失败" << endl;
+		}
+		else if (section == 3)
+		{
+			if (que.Empty())
+				cout << "队列为空" << endl;
+			else
+				cout << "队列非空" << endl;
+		}
+		else if (section == 4)
+		{
+			if (que.Front() != 0x3f3f3f3f)
+			{
+				cout << "队首元素为：";
+				cout << que.Front() << endl;
+			}
+			else
+				cout << "队列中无元素" << endl;
+		}
+		else if (section == 5)
+			exit(0);
+	}
+	return 0;
+}
+
+template <class T>
+node<T>::node<T>(T e)
+{
+	data = e;
+	next = nullptr;
+}
+
+template <class T>
+Queue<T>::Queue<T>()
+{
+	ListQueue = tail = nullptr;
+}
+
+template <class T>
+void Queue<T>::Push(node<T>*& t)
+{
+	if (ListQueue == nullptr && tail == nullptr)
+	{
+		ListQueue = tail = t;
+		t->next = t;
+	}
+	else if(ListQueue != nullptr && tail != nullptr)
+	{
+		tail->next = t;
+		t->next = ListQueue;
+		tail = t;
+	}
+}
+
+template <class T>
+bool Queue<T>::Pop()
+{
+	if (ListQueue != nullptr && tail != nullptr && ListQueue != tail)
+	{
+		node<T> *temp = ListQueue;
+		ListQueue = temp->next;
+		tail->next = ListQueue;
+		delete temp;
+		return true;
+	}
+	else if (ListQueue != nullptr && tail != nullptr && ListQueue == tail)
+	{
+		node<T>* temp = ListQueue;
+		ListQueue = tail = nullptr;
+		delete temp;
+		return true;
+	}
+	else if(ListQueue == nullptr && tail == nullptr)
+		return false;
+}
+
+template <class T>
+bool Queue<T>::Empty()
+{
+	if (ListQueue == nullptr && tail == nullptr)
+		return true;
+	else
+		return false;
+}
+template <class T>
+T Queue<T>::Front()
+{
+	if (ListQueue != nullptr)
+		return ListQueue->data;
+	else
+		return 0x3f3f3f3f;
+}
+
+void show()
+{
+	cout << "请输入你需要进行的操作" << endl;
+	cout << "1.插入元素" << endl;
+	cout << "2.删除元素" << endl;
+	cout << "3.队列是否为空" << endl;
+	cout << "4.获取队首元素" << endl;
+	cout << "5.退出" << endl;
+}
+
+————————————————————————————————————————————————————————————
+树的链式以及递归遍历以及树中节点个数
+#include <iostream>
+using namespace std;
+template<class T>
+class node
+{
+	template<class T> friend class Tree;
+	public:
+		node<T>(T e);
+	private:
+		T data;
+		node<T>* leftson;
+		node<T>* rightson;
+};
+
+template <class T>
+class Tree
+{
+	public:
+		Tree<T>();
+		node<T>* create();
+		void preorder(node<T>* t);
+		void inorder(node<T>* t);
+		void postorder(node<T>* t);
+		int nodeNum(node<T>* t);
+		node<T>* root;
+};
+
+int main() 
+{
+	Tree<int>* tree = new Tree<int>();
+	tree->root = tree->create();
+	cout << "先序遍历：";
+	tree->preorder(tree->root);
+	puts("");
+	cout << "中序遍历：";
+	tree->inorder(tree->root);
+	puts("");
+	cout << "后续遍历：";
+	tree->postorder(tree->root);
+	puts("");
+	cout << "树中节点个数：" << tree->nodeNum(tree->root) << endl;
+	
+	return 0;
+}
+
+template <class T>
+node<T>::node(T e)
+{
+	data = e;
+	leftson = rightson = nullptr;
+}
+
+template <class T>
+Tree<T>::Tree()
+{
+	root = nullptr;
+}
+
+template <class T>
+node<T>* Tree<T>::create()
+{
+	node<T>* Root;
+	T e;
+	cin >> e;
+	if (e == -1)
+		return nullptr;
+	else
+	{
+		Root = new node<T>(e);
+		cout << "请输入左子树" << endl;
+		Root->leftson = create();
+		cout << "请输入右子树" << endl;
+		Root->rightson = create();
+		return Root;
+	}
+}
+
+template <class T>
+void Tree<T>::preorder(node<T>* t)//先序
+{
+	if (t == nullptr)
+		return;
+	cout << t->data << " ";
+	preorder(t->leftson);
+	preorder(t->rightson);
+}
+
+template <class T>
+void Tree<T>::inorder(node<T>* t)//中序
+{
+	if (t == nullptr)
+		return;
+	inorder(t->leftson);
+	cout << t->data << " ";
+	inorder(t->rightson);
+}
+
+template <class T >
+void Tree<T>::postorder(node<T>* t)//后序
+{
+	if (t == nullptr)
+		return;
+	postorder(t->leftson);
+	postorder(t->rightson);
+	cout << t->data << " ";
+}
+
+template <class T>
+int Tree<T>::nodeNum(node<T>* t)
+{
+	int res = 0;
+	if (t == nullptr)
+		return 0;
+	else
+		res = 1 + nodeNum(t->leftson) + nodeNum(t->rightson);
+	return res;
+}
+
+
+
+
+————————————————————————————————————————————————————————————
+树的创建以及遍历
+#include <iostream>
+#include <algorithm>
+#include <queue>
+#include <stack>
+using namespace std;
+struct Treenode
+{
+	int data;
+	Treenode *Leftson;
+	Treenode *Rightson;
+};
+struct Tree
+{
+	Treenode *root;
+	Tree();
+	Treenode* create();
+	void search(Treenode* t, int x,bool& flag);
+	void porder(Treenode *r);//先序
+	void inorder(Treenode* r);//中序
+	void epilogue(Treenode* r);//后续
+	void  sequence(Treenode* r);//层序
+};
+
+int main()
+{
+	Tree* tree = new Tree();
+	tree->root = tree->create();
+	cout << "先序遍历:";
+	tree->porder(tree->root);
+	puts("");
+	cout << "中序遍历:";
+	tree->inorder(tree->root);
+	puts("");
+	cout << "后续遍历:";
+	tree->epilogue(tree->root);
+	puts("");
+	cout << "层序遍历:";
+	tree->sequence(tree->root);
+	puts("");
+	/*bool flag = false;
+	tree->search(tree->root, 2, flag);
+	if (flag)
+		cout << "yes" << endl;
+	else
+		cout << "no" << endl;*/
+	return 0;
+}
+
+Tree::Tree()
+{
+	root = nullptr;
+}
+
+Treenode* Tree::create()
+{
+	int e;
+	Treenode* Root;
+	cin >> e;
+	if (e == -1)
+		return nullptr;
+	else
+	{
+		Root = new Treenode;
+		Root->data = e;
+		cout << "请输入左子树" << endl;
+		Root->Leftson = create();
+		cout << "请输入右子树" << endl;
+		Root->Rightson = create();
+		return Root;
+	}
+}
+void Tree::search(Treenode *t,int x,bool &flag)
+{
+	if (t == nullptr)
+		return ;
+	if (t->data == x)
+		flag = true;
+	else
+	{
+		search(t->Leftson, x,flag);
+		search(t->Rightson, x,flag);
+	}
+}
+//非递归实现
+void Tree::porder(Treenode* r)//先序
+{
+	stack<Treenode*> s;
+	if (r == nullptr)
+		return;
+	Treenode* p = r;
+	while (!s.empty() || p != nullptr)
+	{
+		while (p != nullptr)
+		{
+			s.push(p);
+			cout << p->data << " ";
+			p = p->Leftson;
+		}
+		if (!s.empty())
+		{
+			p = s.top();
+			s.pop();
+			p = p->Rightson;
+		}
+	}
+}
+void Tree:: inorder(Treenode* r)//中序
+{
+	stack<Treenode*> s;
+	if (r == nullptr)
+		return;
+	Treenode* p = r;
+	while (!s.empty() || p != nullptr)
+	{
+		while (p != nullptr)
+		{
+			s.push(p);
+			p = p->Leftson;
+		}
+		if (!s.empty())
+		{
+			p = s.top();
+			cout << p->data << " ";
+			s.pop();
+			p = p->Rightson;
+		}
+	}
+}
+void Tree::epilogue(Treenode* r)//后续
+{
+	stack<Treenode*> s1;
+	stack<Treenode*> s2;
+	if (r == nullptr)
+		return;
+	Treenode* p = r;
+	s1.push(p);
+	while (!s1.empty())
+	{
+		p = s1.top();
+		s1.pop();
+		if (p->Leftson)
+			s1.push(p->Leftson);
+		if (p->Rightson)
+			s1.push(p->Rightson);
+		s2.push(p);
+	}
+	while (!s2.empty())
+	{
+		Treenode* t = s2.top();
+		s2.pop();
+		cout << t -> data << " ";
+	}
+}
+
+
+//递归实现
+/*
+void Tree::porder(Treenode* r)//先序
+{
+	if (r == nullptr)
+		return;
+	cout << r->data << " ";
+	porder(r->Leftson);
+	porder(r->Rightson);
+}
+void Tree::epilogue(Treenode* r)//后续
+{
+	if (r == nullptr)
+		return;
+	epilogue(r->Leftson);
+	epilogue(r->Rightson);
+	cout << r->data << " ";
+}
+void Tree::inorder(Treenode* r)//中序
+{
+	if (r == nullptr)
+		return;
+	inorder(r->Leftson);
+	cout << r->data << " ";
+	inorder(r->Rightson);
+}
+*/
+
+void Tree:: sequence(Treenode* r)//层序
+{
+	queue<Treenode*> q;
+	q.push(r);
+	while (!q.empty())
+	{
+		Treenode* t = q.front();
+		cout << t->data << " ";
+		q.pop();
+		if (t->Leftson)
+			q.push(t->Leftson);
+		if (t->Rightson)
+			q.push(t->Rightson);
+	}
+}
+
+————————————————————————————————————————————————————————————————
+哈夫曼树
+#include <iostream>
+#include <algorithm>
+#include <cstring>
+using namespace std;
+const int N=10010;
+struct node
+{
+    int data;
+    node* lson;
+    node* rson;
+    node(){}
+    node(node& A)
+    {
+        data=A.data;
+        lson=A.lson;
+        rson=A.rson;
+    }
+    node(node*& x, node*& y)
+    {
+        data=x->data+y->data;
+        lson=x;
+        rson=y;
+    }
+    node& operator=(node& A)
+    {
+        data=A.data;
+        lson=A.lson;
+        rson=A.rson;
+        return *this;
+    }
+};
+int n, s;
+node h[N];
+void down(int u);
+void up(int u);
+void print(node* r);
+
+int main()
+{
+    cin>>n;
+    s=n;
+    for(int i=1;i<=n;++i)
+        cin>>h[i].data;
+    for(int i=n/2;i;--i)
+        down(i);
+    for(int i=1;i<=n;++i)
+        cout<<h[i].data<<" ";
+    cout<<endl;
+    node* r=new node;
+    for(int i=1;i<n;++i)
+    {
+        node* a=new node(h[1]);
+        h[1].data=h[s].data;
+        h[1].lson=h[s].lson;
+        h[1].rson=h[s].rson;
+        --s;
+        down(1);
+        node* b=new node(h[1]);
+        h[1].data=h[s].data;
+        h[1].lson=h[s].lson;
+        h[1].rson=h[s].rson;
+        --s;
+        down(1);
+        /*cout<<a->data<<" "<<b->data<<endl;
+        if(a->lson&&a->rson)
+            cout<<"a: "<<a->lson->data<<" "<<a->rson->data<<endl;
+        if(b->lson&&b->rson)
+            cout<<"b: "<<b->lson->data<<" "<<b->rson->data<<endl;*/
+        node* c=new node(a,b);
+        r=c;
+        ++s;
+        h[s].data=c->data;
+        h[s].lson=c->lson;
+        h[s].rson=c->rson;
+        up(s);
+    }
+    cout<<r->data<<endl;
+    print(r);
+    return 0;
+}
+void down(int u)
+{
+    int t=u;
+    if(u*2 <= s && h[u*2].data < h[t].data)
+        t=u*2;
+    if(u*2+1 <= s && h[u*2+1].data < h[t].data)
+        t=u*2+1;
+    if(u!=t)
+    {
+        swap(h[u].data,h[t].data);
+        swap(h[u].lson,h[t].lson);
+        swap(h[u].rson,h[t].rson);
+        down(t);
+    }
+}
+
+void up(int u)
+{
+    while(u/2 && h[u/2].data > h[u].data)
+    {
+        swap(h[u/2].data,h[u].data);
+        swap(h[u/2].lson,h[u].lson);
+        swap(h[u/2].rson,h[u].rson);
+        u/=2;
+    }
+}
+
+void print(node* r)
+{
+    if(!r)
+        return;
+    cout<<r->data<<" ";
+    print(r->lson);
+    print(r->rson);
+}
+
+
+————————————————————————————————————————————————————————————————————————————————
+图的dfs
+#include <iostream>
+#include <algorithm>
+#include <cstring>
+using namespace std;
+const int N=10010, M=N*2;
+int h[N], e[M], ne[M], idx;
+bool st[N];
+void add(int a, int b);
+void dfs(int u);
+
+int main()
+{
+    memset(h,-1,sizeof h);
+    int n;
+    cin>>n;
+    for(int i=0;i<n-1;++i)
+    {
+        int a, b;
+        cin>>a>>b;
+        add(a, b);
+        add(b, a);
+    }
+    dfs(1);
+    return 0;
+}
+
+void add(int a, int b)
+{
+    e[idx] = b;
+    ne[idx] = h[a];
+    h[a] = idx++;
+}
+
+void dfs(int u)
+{
+    st[u]=true;
+    cout<<u<<endl;
+    for(int i=h[u];i!=-1;i=ne[i])
+    {
+        int j=e[i];
+        if(!st[j])
+            dfs(j);
+    }
+}
+
+————————————————————————————————————————————————————————————————————————————
+归并排序和快速排序
+
+#include <iostream>
+#include <algorithm>
+#include <cstring>
+using namespace std;
+const int N=100010;
+int a[N], n, tmp[N];
+void print(int q[],int n);
+void quick_sort(int q[], int l, int r);
+void merge_sort(int q[], int l, int r);
+
+int main()
+{
+    cin>>n;
+    for(int i=0;i<n;++i)
+        cin>>a[i];
+    //quick_sort(a,0,n-1);
+    for(int i=0;i<n;++i)
+        cout<<a[i]<<" ";
+    puts("");
+    merge_sort(a,0,n-1);
+    print(a,n);
+    return 0;
+}
+
+void print(int q[], int n)
+{
+    for(int i=0;i<n;++i)
+        cout<<q[i]<<" ";
+    cout<<endl;
+}
+
+void quick_sort(int q[], int l, int r)
+{
+    if(l>=r)
+        return ;
+    int x= q[(l+r)>>1];
+    int i=l-1, j=r+1;
+    while(i<j)
+    {
+        do {
+            ++i;
+        }while(q[i]<x);
+        do {
+            --j;
+        }while(q[j]>x);
+        if(i<j)
+            swap(q[i],q[j]);
+    }
+    //print(q,n);
+    quick_sort(q,l,j);
+    quick_sort(q,j+1,r);
+}
+
+void merge_sort(int q[], int l, int r)
+{
+    if(l>=r)
+        return ;
+    int mid=l+r>>1;
+    merge_sort(q,l,mid);
+    merge_sort(q,mid+1,r);
+    int i=l, j=mid+1, cnt=1;
+    while(i<=mid&&j<=r)
+    {
+        if(q[i]<q[j])
+            tmp[cnt++]=q[i++];
+        else
+            tmp[cnt++]=q[j++];
+    }
+    while(i<=mid)
+        tmp[cnt++]=q[i++];
+    while(j<=r)
+        tmp[cnt++]=q[j++];
+    for(i=l,j=1;i<=r;++i)
+        q[i]=tmp[j++];
+    //cout<<l<<" "<<mid<<" "<<r<<endl;
+    //print(q,n);
+}
+
+——————————————————————————————————————————————————————————————————————————
+堆排序
+
+#include <iostream>
+#include <algorithm>
+#include <cstring>
+using namespace std;
+const int N=1e5+10;
+int h[N],hp[N],ph[N],Size=0;
+void heap_swap(int a,int b);
+void up(int u);
+void down(int u);
+
+int main()
+{
+    int n,m=0;
+    scanf("%d",&n);
+    while(n--)
+    {
+       string s;
+       cin>>s;
+       if(s=="I")
+       {
+           int x;
+           scanf("%d",&x);
+           ++Size;
+           ++m;
+           ph[m]=Size;
+           hp[Size]=m;
+           h[Size]=x;
+           up(Size);
+       }
+       else if(s=="PM")
+       {
+           printf("%d\n",h[1]);
+       }
+       else if(s=="DM")
+       {
+           heap_swap(1,Size);
+           --Size;
+           down(1);
+       }
+       else if(s=="D")
+       {
+           int k;
+           scanf("%d",&k);
+           k=ph[k];
+           heap_swap(k,Size);
+           --Size;
+           down(k),up(k);
+       }
+       else if(s=="C")
+       {
+           int k,x;
+           scanf("%d%d",&k,&x);
+           k=ph[k];
+           h[k]=x;
+           down(k),up(k);
+       }
+    }
+
+    return 0;
+}
+
+void heap_swap(int a,int b)
+{
+    swap(ph[hp[a]],ph[hp[b]]);
+    swap(hp[a],hp[b]);
+    swap(h[a],h[b]);
+}
+
+void up(int u)
+{
+    while(u/2&&h[u/2]>h[u])
+    {
+        heap_swap(u/2,u);
+        u/=2;
+    }
+}
+
+void down(int u)
+{
+    int t=u;
+    if(2*u<=Size&&h[2*u]<h[t])
+        t=2*u;
+    if(2*u+1<=Size&&h[2*u+1]<h[t])
+        t=2*u+1;
+    if(t!=u)
+    {
+        heap_swap(t,u);
+        down(t);
+    }
+}
+————————————————————————————————————————————————————————————————————————————
+二分查找
+#include <iostream>
+#include <algorithm>
+#include <cstring>
+using namespace std;
+const int N=10010;
+int a[N], n, m;
+
+int main()
+{
+    cin>>n>>m;
+    for(int i=0;i<n;++i)
+        cin>>a[i];
+    sort(a,a+n);
+    int l=0, r=n-1;
+    while(l<r)
+    {
+        int mid=l+r>>1;
+        if(a[mid]>=m)
+            r=mid;
+        else
+            l=mid+1;
+    }
+    for(int i=0;i<n;++i)
+        cout<<a[i]<<" ";
+    puts("");
+    cout<<l<<" "<<a[l]<<endl;
+    return 0;
+}
+
+
+——————————————————————————————————————————————————————————————————————
+
+
+希尔排序
+
+#include <iostream>
+#include <algorithm>
+#include <cstring>
+using namespace std;
+const int N=110;
+int m[4]={6,3,2,1};
+int n;
+int a[N];
+void shell(int q[], int len);
+
+int main()
+{
+    cin>>n;
+    for(int i=0;i<n;++i)
+        cin>>a[i];
+    shell(a, n);
+    for(int i=0;i<n;++i)
+        cout<<a[i]<<" ";
+    return 0;
+}
+void shell(int q[], int len)
+{
+    for(int i=0;i<4;++i)
+    {
+        for(int j=m[i];j<len;++j)
+        {
+            int t=q[j];
+            int k=j-m[i];
+            while(k>=0&&q[k]>t)
+            {
+                q[k+m[i]]=q[k];
+                k-=m[i];
+            }
+            q[k+m[i]]=t;
+        }
+        for(int i=0;i<len;++i)
+            cout<<q[i]<<' ';
+        cout<<endl;
+    }
+}
+
+——————————————————————————————————————————————————————————————————————
+二叉查找树
+#include <iostream>
+using namespace std;
+struct node
+{
+    int data;
+    node* left;
+    node* right;
+    node(int x)
+    {
+        data=x;
+        left=right=nullptr;
+    }
+};
+node* newnode(int x);
+node* insert(node* tree, int x);
+node* makeTree(int n);
+void print1(node* r);
+void print2(node* r);
+int main()
+{
+    int n;
+    cin>>n;
+    node* Tree= makeTree(n);
+    print1(Tree);
+    puts("");
+    print2(Tree);
+    return 0;
+}
+node* newnode(int x)
+{
+    node* t=new node(x);
+    return t;
+}
+node* insert(node* tree, int x)
+{
+    if(!tree)
+    {
+        tree=newnode(x);
+    }
+    else
+    {
+        if(x>tree->data)
+            tree->right=insert(tree->right,x);
+        else
+            tree->left=insert(tree->left,x);
+    }
+    return tree;
+}
+node* makeTree(int n)
+{
+    node* t;
+    int x;
+    cin>>x;
+    t=newnode(x);
+    for(int i=1;i<n;++i)
+    {
+        cin>>x;
+        t=insert(t,x);
+    }
+    return t;
+}
+
+void print1(node* r)
+{
+    if(!r)
+        return;
+    cout<<r->data;
+    print1(r->left);
+    print1(r->right);
+}
+
+void print2(node* r)
+{
+    if(!r)
+        return;
+    print2(r->left);
+    cout<<r->data;
+    print2(r->right);
+}
+
+————————————————————————————————————————————————————————————————————————————
+迪杰斯特拉
+
+/*
+给定一个 n 个点 m 条边的有向图，图中可能存在重边和自环，所有边权均为正值。
+请你求出 1 号点到 n 号点的最短距离，如果无法从 1 号点走到 n 号点，则输出 −1。
+输入格式
+第一行包含整数 n 和 m。
+接下来 m 行每行包含三个整数 x,y,z，表示存在一条从点 x 到点 y 的有向边，边长为 z。
+输出格式
+输出一个整数，表示 1 号点到 n 号点的最短距离。
+如果路径不存在，则输出 −1。
+数据范围
+1≤n≤500,
+1≤m≤105,
+图中涉及边长均不超过10000。
+输入样例：
+3 3
+1 2 2
+2 3 1
+1 3 4
+输出样例：
+3
+*/
+#include <iostream>
+#include <algorithm>
+#include <cstring>
+using namespace std;
+const int N=510;
+int g[N][N],dist[N];
+bool st[N];
+int n,m;
+int dijkstra();
+
+int main()
+{
+    cin>>n>>m;
+    memset(g,0x3f,sizeof g);
+    while(m--)
+    {
+        int x,y,z;
+        cin>>x>>y>>z;
+        g[x][y]=min(g[x][y],z);
+    }
+    int t=dijkstra();
+    cout<<t<<endl;
+    return 0;
+}
+
+int dijkstra()
+{
+    memset(dist,0x3f,sizeof dist);
+    dist[1]=0;
+    
+    for(int i=0;i<n;++i)
+    {
+        int t=-1;
+        for(int j=1;j<=n;++j)
+        {
+            if(!st[j]&&(t==-1||dist[t]>dist[j]))
+                t=j;
+        }
+        st[t]=true;
+        for(int j=1;j<=n;++j)
+        {
+            dist[j]=min(dist[j],dist[t]+g[t][j]);
+        }
+    }
+    if(dist[n]==0x3f3f3f3f)
+        return -1;
+    return dist[n];
+}
+
+
+——————————————————————————————————————————————————————————————————___
+Bellman-ford
+
+该题有一经过边数限制所以该题需使用Bellman-ford算法，限制经过边数可以有效解决负环问题
+/*
+给定一个 n 个点 m 条边的有向图，图中可能存在重边和自环， 边权可能为负数。
+请你求出从 1 号点到 n 号点的最多经过 k 条边的最短距离，如果无法从 1 号点走到 n 号点，输出 impossible。
+注意：图中可能 存在负权回路 。
+输入格式
+第一行包含三个整数 n,m,k。
+接下来 m 行，每行包含三个整数 x,y,z，表示存在一条从点 x 到点 y 的有向边，边长为 z。
+输出格式
+输出一个整数，表示从 1 号点到 n 号点的最多经过 k 条边的最短距离。
+如果不存在满足条件的路径，则输出 impossible。
+数据范围
+1≤n,k≤500,
+1≤m≤10000,
+任意边长的绝对值不超过 10000。
+输入样例：
+3 3 1
+1 2 1
+2 3 1
+1 3 3
+输出样例：
+3
+*/
+#include <iostream>
+#include <cstring>
+#include <algorithm>
+using namespace std;
+const int N=510,M=10010;
+int n,m,k;
+int dist[N],backup[N];
+struct
+{
+    int a,b,w;
+}edges[M];
+void Bellman_ford();
+
+int main()
+{
+    cin>>n>>m>>k;
+    for(int i=0;i<m;++i)
+    {
+        int x,y,z;
+        cin>>x>>y>>z;
+        edges[i]={x,y,z};
+    }
+    Bellman_ford();
+    return 0;
+}
+void Bellman_ford()
+{
+    memset(dist,0x3f,sizeof dist);
+    dist[1]=0;
+    for(int i=0;i<k;++i)
+    {
+        memcpy(backup,dist,sizeof dist);
+        for(int j=0;j<m;++j)
+        {
+            int a=edges[j].a,b=edges[j].b,w=edges[j].w;
+            dist[b]=min(dist[b],backup[a]+w);
+        }
+    }
+    if(dist[n]>0x3f3f3f3f/2)
+        puts("impossible");
+    else
+        cout<<dist[n]<<endl;
+}
+
+——————————————————————————————————————————————————————————————————————————————
+spfa
+/*
+给定一个 n 个点 m 条边的有向图，图中可能存在重边和自环， 边权可能为负数。
+请你求出 1 号点到 n 号点的最短距离，如果无法从 1 号点走到 n 号点，则输出 impossible。
+数据保证不存在负权回路。
+输入格式
+第一行包含整数 n 和 m。
+接下来 m 行每行包含三个整数 x,y,z，表示存在一条从点 x 到点 y 的有向边，边长为 z。
+输出格式
+输出一个整数，表示 1 号点到 n 号点的最短距离。
+如果路径不存在，则输出 impossible。
+数据范围
+1≤n,m≤105,
+图中涉及边长绝对值均不超过 10000。
+输入样例：
+3 3
+1 2 5
+2 3 -3
+1 3 4
+输出样例：
+2
+*/
+#include <iostream>
+#include <algorithm>
+#include <cstring>
+#include <queue>
+using namespace std;
+const int N=1e5+10;
+int h[N],e[N],ne[N],w[N],idx;
+int dist[N];
+bool st[N];
+int n,m;
+void add(int a,int b,int c);
+int spfa();
+
+int main()
+{
+    cin>>n>>m;
+    memset(h,-1,sizeof h);
+    
+    for(int i=0;i<m;++i)
+    {
+        int x,y,z;
+        cin>>x>>y>>z;
+        add(x,y,z);
+    }
+    
+    int t=spfa();
+    if(t==0x3f3f3f3f)
+        puts("impossible");
+    else
+        cout<<t;
+    return 0;
+}
+void add(int a,int b,int c)
+{
+    e[idx]=b;
+    w[idx]=c;
+    ne[idx]=h[a];
+    h[a]=idx++;
+}
+int spfa()
+{
+    memset(dist,0x3f,sizeof dist);
+    dist[1]=0;
+    queue<int> q;
+    q.push(1);
+    st[1]=true;
+    while(q.size())
+    {
+        int t=q.front();
+        q.pop();
+        st[t]=false;
+        
+        for(int i=h[t];i!=-1;i=ne[i])
+        {
+            int j=e[i];
+            if(dist[j]>dist[t]+w[i])
+            {
+                dist[j]=dist[t]+w[i];
+                if(!st[j])
+                {
+                    q.push(j);
+                    st[j]=true;
+                }
+            }
+        }
+    }
+    return dist[n];
+}
+
+————————————————————————————————————————————————————————————————————————
+folyd
+
+/*
+给定一个 n 个点 m 条边的有向图，图中可能存在重边和自环，边权可能为负数。
+再给定 k 个询问，每个询问包含两个整数 x 和 y，表示查询从点 x 到点 y 的最短距离，如果路径不存在，则输出 impossible。
+数据保证图中不存在负权回路。
+输入格式
+第一行包含三个整数 n,m,k。
+接下来 m 行，每行包含三个整数 x,y,z，表示存在一条从点 x 到点 y 的有向边，边长为 z。
+接下来 k 行，每行包含两个整数 x,y，表示询问点 x 到点 y 的最短距离。
+输出格式
+共 k 行，每行输出一个整数，表示询问的结果，若询问两点间不存在路径，则输出 impossible。
+数据范围
+1≤n≤200,
+1≤k≤n2
+1≤m≤20000,
+图中涉及边长绝对值均不超过 10000。
+输入样例：
+3 3 2
+1 2 1
+2 3 2
+1 3 1
+2 1
+1 3
+输出样例：
+impossible
+1
+*/
+#include <iostream>
+#include <algorithm>
+using namespace std;
+const int N=210,INF=0x3f3f3f3f;
+int g[N][N];
+int n,m,k;
+void floyd();
+
+int main()
+{
+    scanf("%d%d%d",&n,&m,&k);
+    for(int i=1;i<=n;++i)
+    {
+        for(int j=1;j<=n;++j)
+        {
+            if(i==j)
+                g[i][j]=0;
+            else
+                g[i][j]=INF;
+        }
+    }
+    
+    while(m--)
+    {
+        int x,y,z;
+        scanf("%d%d%d",&x,&y,&z);
+        g[x][y]=min(z,g[x][y]);
+    }
+    
+    floyd();
+    
+    while(k--)
+    {
+        int x,y;
+        scanf("%d%d",&x,&y);
+        if(g[x][y]>INF/2)
+            puts("impossible");
+        else
+            printf("%d\n",g[x][y]);
+    }
+    return 0;
+}
+
+void floyd()
+{
+    for(int k=1;k<=n;++k)
+    {
+        for(int i=1;i<=n;++i)
+        {
+            for(int j=1;j<=n;++j)
+            {
+                g[i][j]=min(g[i][j],g[i][k]+g[k][j]);
+            }
+        }
+    }
+}
+
+——————————————————————————————————————————————————————————————————————
+prim
+/*
+给定一个 n 个点 m 条边的无向图，图中可能存在重边和自环，边权可能为负数。
+求最小生成树的树边权重之和，如果最小生成树不存在则输出 impossible。
+给定一张边带权的无向图 G=(V,E)，其中 V 表示图中点的集合，E 表示图中边的集合，n=|V|，m=|E|。
+由 V 中的全部 n 个顶点和 E 中 n−1 条边构成的无向连通子图被称为 G 的一棵生成树，其中边的权值之和最小的生成树被称为无向图 G 的最小生成树。
+输入格式
+第一行包含两个整数 n 和 m。
+接下来 m 行，每行包含三个整数 u,v,w，表示点 u 和点 v 之间存在一条权值为 w 的边。
+输出格式
+共一行，若存在最小生成树，则输出一个整数，表示最小生成树的树边权重之和，如果最小生成树不存在则输出 impossible。
+
+数据范围
+1≤n≤500,
+1≤m≤105,
+图中涉及边的边权的绝对值均不超过 10000。
+
+输入样例：
+4 5
+1 2 1
+1 3 2
+1 4 3
+2 3 2
+3 4 4
+输出样例：
+6
+*/
+#include <iostream>
+#include <cstring>
+#include <algorithm>
+using namespace std;
+const int N=510,INF=0x3f3f3f3f;
+int g[N][N],dist[N],n,m;
+bool st[N];
+int prim();
+
+int main()
+{
+    scanf("%d%d",&n,&m);//n个节点,m条边
+    memset(g,0x3f,sizeof g);//初始化邻接矩阵
+    while(m--)
+    {
+        int a,b,c;
+        scanf("%d%d%d",&a,&b,&c);
+        g[a][b]=g[b][a]=min(g[a][b],c);//输入边的权重(注意有重边和自环)
+    }
+    
+    int t=prim();
+    if(t==INF)
+        puts("impossible");
+    else
+        printf("%d\n",t);
+        
+    return 0;
+}
+
+int prim()
+{
+    int res=0;
+    memset(dist,0x3f,sizeof dist);//初始化距离数组(将距离初始化为正无穷)
+    for(int i=0;i<n;++i)//迭代n次
+    {
+        int t=-1;
+        for(int j=1;j<=n;++j)//从集合外找到距离集合最近的点
+            if(!st[j]&&(t==-1||dist[t]>dist[j]))
+                t=j;
+        if(i&&dist[t]==INF)//判断该点是否满足,不满足返回INF
+            return INF;
+        if(i)//满足且不是第一个点,则将距离累加至res
+            res+=dist[t];
+        st[t]=true;//将该点加入集合
+        for(int j=1;j<=n;++j)//根据该点更新他的邻接点到集合的距离
+        {
+            dist[j]=min(dist[j],g[t][j]);//此处跟新保证不会构成回路
+        }
+    }
+    return res;//返回最小生成树的距离和
+}
+
+——————————————————————————————————————————————————————————————————————————
+kruskal
+
+
+/*
+给定一个 n 个点 m 条边的无向图，图中可能存在重边和自环，边权可能为负数。
+求最小生成树的树边权重之和，如果最小生成树不存在则输出 impossible。
+给定一张边带权的无向图 G=(V,E)，其中 V 表示图中点的集合，E 表示图中边的集合，n=|V|，m=|E|。
+由 V 中的全部 n 个顶点和 E 中 n−1 条边构成的无向连通子图被称为 G 的一棵生成树，其中边的权值之和最小的生成树被称为无向图 G 的最小生成树。
+输入格式
+第一行包含两个整数 n 和 m。
+接下来 m 行，每行包含三个整数 u,v,w，表示点 u 和点 v 之间存在一条权值为 w 的边。
+输出格式
+共一行，若存在最小生成树，则输出一个整数，表示最小生成树的树边权重之和，如果最小生成树不存在则输出 impossible。
+
+数据范围
+1≤n≤105,
+1≤m≤2∗105,
+图中涉及边的边权的绝对值均不超过 1000。
+
+输入样例：
+4 5
+1 2 1
+1 3 2
+1 4 3
+2 3 2
+3 4 4
+输出样例：
+6
+*/
+#include <iostream>
+#include <algorithm>
+using namespace std;
+const int N=1e6+10,INF=0x3f3f3f3f;
+struct edge
+{
+  int u,v,w;//w=(u,v)边的权重
+  bool operator<(edge &e)//用于sort排序(升序)
+  {
+      return w<e.w;
+  }
+}edges[N];
+int n,m,p[N];//p[N]是并查集
+int Find(int x);//并查集找集合标志
+int kruskal();
+
+int main()
+{
+    scanf("%d%d",&n,&m);
+    for(int i=0;i<m;++i)//此处并不用到图的结构,仅用到边，所以仅需要将边存储下来
+    {
+        int a,b,c;
+        scanf("%d%d%d",&a,&b,&c);
+        edges[i]={a,b,c};
+    }
+    
+    int t=kruskal();
+    if(t==INF)
+        puts("impossible");
+    else
+        printf("%d\n",t);
+    return 0;
+}
+
+int Find(int x)
+{
+    if(p[x]!=x)
+        p[x]=Find(p[x]);
+    return p[x];
+}
+
+int kruskal()
+{
+    sort(edges,edges+m);//对边的权重排序
+    
+    for(int i=1;i<=n;++i)//初始化并查集
+        p[i]=i;
+        
+    int res=0,cnt=0;//res存放最小生成树的路径总和,cnt存放最小生成树边的个数
+    
+    for(int i=0;i<m;++i)//遍历所有边
+    {
+        int a=edges[i].u;
+        int b=edges[i].v;
+        int c=edges[i].w;
+        a=Find(a);
+        b=Find(b);
+        if(a!=b)//若边存在不连通，则将两点连通,合并集合,边数+1,路径累加
+        {
+            res+=c;
+            p[a]=b;
+            ++cnt;
+        }
+    }
+    
+    if(cnt<n-1)
+        return INF;
+    else
+        return res;
+}
+
+——————————————————————————————————————————————————————————————————————
+哈希  拉链法
+
+#include <iostream>
+#include <algorithm>
+#include <cstring>
+using namespace std;
+const int N = 100003;
+int h[N], ne[N], e[N], idx;
+void insert(int u);
+bool query(int x);
+
+int main()
+{
+    int n;
+    cin>>n;
+    memset(h,-1,sizeof h);
+    while(n--)
+    {
+        char op[2];
+        cin>>op;
+        int x;
+        cin>>x;
+        if(op[0]=='I')
+            insert(x);
+        else
+        {
+            if(query(x))
+                puts("Yes");
+            else
+                puts("No");
+        }
+    }
+    return 0;
+}
+
+void insert(int u)
+{
+    int k=(u%N+N)%N;
+    e[idx]=u;
+    ne[idx]=h[k];
+    h[k]=idx++;
+}
+bool query(int x)
+{
+    int k=(x%N+N)%N;
+    for(int i=h[k];i!=-1;i=ne[i])
+        if(e[i]==x)
+            return true;
+    return false;
+}
+
+——————————————————————————————————————————————————————————————————
+开放寻址发
+
+#include <iostream>
+#include <algorithm>
+#include <cstring>
+using namespace std;
+const int N = 200003, null=0x3f3f3f3f;
+int h[N];
+int find(int x);
+
+int main()
+{
+    int n;
+    cin>>n;
+    memset(h,0x3f,sizeof h);
+    while(n--)
+    {
+        char op[2];
+        cin>>op;
+        int x;
+        cin>>x;
+        int k=find(x);
+        if(op[0]=='I')
+            h[k]=x;
+        else
+        {
+            if(h[k]==null)
+                puts("No");
+            else
+                puts("Yes");    
+        }
+    }
+    
+    return 0;
+}
+
+int find(int x)
+{
+    int k=(x%N+N)%N;
+    while(h[k]!=null && h[k]!=x)
+    {
+        ++k;
+        if(k==N)
+            k=0;
+    }
+    return k;
+}
+
+——————————————————————————————————————————————————————————————————————
