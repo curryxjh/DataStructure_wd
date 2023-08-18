@@ -12,19 +12,10 @@ struct TreeNode
     ElemType element;
     TreeNode *leftson, *rightson;
 };
-struct Queue
-{
-    int front, rear;
-    TreeNode* data[MaxSize];
-};
 struct Tree
 {
     TreeNode *root;
 };
-void InitQueue(Queue &q);
-bool IsEmpty(Queue &q);
-bool EnQueue(Queue &q, TreeNode *x);
-bool DeQueue(Queue &q, TreeNode *&x);
 
 void Init(Tree &tree);
 TreeNode* CreateTree();
@@ -73,32 +64,6 @@ TreeNode* CreateTree()
     }
 }
 
-
-void InitQueue(Queue &q)
-{
-    q.front = q.rear = -1;
-}
-
-bool IsEmpty(Queue &q)
-{
-    return q.front == q.rear;
-}
-
-bool EnQueue(Queue &q, TreeNode *x)
-{
-    if (q.rear == MaxSize)
-        return false;
-    q.data[++ q.rear] = x;
-    return true;
-}
-
-bool DeQueue(Queue &q, TreeNode *&x)
-{
-    if (IsEmpty(q))
-        return false;
-    x = q.data[++ q.front];
-    return true;
-}
 
 void Porder(TreeNode* r)
 {
