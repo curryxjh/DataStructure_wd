@@ -1,5 +1,5 @@
 /*
- * p09
+ * p10
  */
 
 #include <iostream>
@@ -28,20 +28,25 @@ bool DeQueue(Queue &q, TreeNode *&x);
 
 void Init(Tree &tree);
 TreeNode* CreateTree();
-void sequence(TreeNode* r);
-void ChangeLeft_Right(TreeNode *r);
+int Find_k(TreeNode *&r);
+void Porder(TreeNode* r);
+int k, id = 1;
 
 int main()
 {
     Tree tree;
     puts("请输入根节点");
     tree.root = CreateTree();
-    cout << "交换前：";
-    sequence(tree.root);
-    ChangeLeft_Right(tree.root);
-    puts("");
-    cout << "交换后：";
-    sequence(tree.root);
+    puts("请输入需要获取先序遍历中第几个节点的值");
+    cin >> k;
+    if (k == -1)
+    {
+        puts("树中节点不足");
+        return 0;
+    }
+    cout << "值为：" << Find_k(tree.root) << endl;
+    cout << "先序：";
+    Porder(tree.root);
     return 0;
 }
 
@@ -95,31 +100,24 @@ bool DeQueue(Queue &q, TreeNode *&x)
     return true;
 }
 
-void sequence(TreeNode* r)
+void Porder(TreeNode* r)
 {
-    Queue q;
-    InitQueue(q);
-    EnQueue(q, r);
-    while (!IsEmpty(q))
-    {
-        TreeNode* tmp;
-        DeQueue(q, tmp);
-        cout << tmp->element << " ";
-        if (tmp->leftson)
-            EnQueue(q, tmp->leftson);
-        if (tmp->rightson)
-            EnQueue(q, tmp->rightson);
-    }
-}
-
-void ChangeLeft_Right(TreeNode *r)
-{
-    if (! r)
+    if (!r)
         return ;
-    ChangeLeft_Right(r->leftson);
-    ChangeLeft_Right(r->rightson);
-
-    TreeNode *tmp = r->leftson;
-    r->leftson = r->rightson;
-    r->rightson = tmp;
+    cout << r->element << " ";
+    Porder(r->leftson);
+    Porder(r->rightson);
+}
+int Find_k(TreeNode *&r)
+{
+    if (!r)
+        return -1;
+    if (id == k)
+        return r->element;
+    ++ id;
+    int val = Find_k(r->leftson);
+    if (val != -1)
+        return val;
+    val = Find_k(r->rightson);
+    return val;
 }
