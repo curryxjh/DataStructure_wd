@@ -29,6 +29,7 @@ bool DeQueue(Queue &q, TreeNode *&x);
 void Init(Tree &tree);
 TreeNode* CreateTree();
 int Height(Tree &tree);
+int depth(TreeNode *&r); // µİ¹éĞ´·¨
 
 int main()
 {
@@ -113,4 +114,16 @@ int Height(Tree &tree)
         }
     }
     return height;
+}
+
+int depth(TreeNode *&r)
+{
+    if (! r)
+        return 0;
+    int left_tree = depth(r->leftson);
+    int right_tree = depth(r->rightson);
+    if (left_tree > right_tree)
+        return left_tree + 1;
+    else
+        return right_tree + 1;
 }
