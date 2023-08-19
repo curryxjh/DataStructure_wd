@@ -76,6 +76,7 @@ void Del_x(TreeNode *&r, int x)
         return ;
     if (r->element == x)
     {
+        delete r;
         r = NULL;
         return ;
     }
