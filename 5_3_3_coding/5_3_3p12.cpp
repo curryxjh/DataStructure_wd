@@ -34,6 +34,8 @@ void Init(Tree &tree);
 TreeNode* CreateTree();
 void Find_ancestor(TreeNode *&r, int x);
 Stack s;
+// todo 第二个方法采用非递归的后序遍历
+void Find_ancestorv2(TreeNode *&r, int x);
 
 int main()
 {
@@ -128,4 +130,9 @@ void Find_ancestor(TreeNode *&r, int x)
     }
     Find_ancestor(r->leftson, x);
     Find_ancestor(r->rightson, x);
+}
+
+void Find_ancestorv2(TreeNode *&r, int x)
+{
+
 }
