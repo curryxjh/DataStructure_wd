@@ -5,7 +5,6 @@
 #include <iostream>
 
 using namespace std;
-const int MaxSize = 110;
 typedef int ElemType;
 struct TreeNode
 {
@@ -17,7 +16,7 @@ struct Tree
 {
     TreeNode *root;
 };
-int level[110];
+
 void Init(Tree &tree);
 TreeNode* CreateTree();
 void leaf(TreeNode *& r);
