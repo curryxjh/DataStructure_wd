@@ -25,7 +25,10 @@ TBNode* NextNode(TBNode *p);
 TBNode* LastNode(TBNode *r);
 // 求中序遍历二叉树中节点p得前驱
 TBNode* FrontNode(TBNode *p);
-void inorder(TBNode* r);
+// 中序遍历
+void inorder(TBNode *r);
+// 不含头节点得中序遍历
+void Inorder(TBNode *r);
 
 int main()
 {
@@ -39,6 +42,8 @@ int main()
     cout << "中序遍历最后一个节点：" << LastNode(tree.root)->data << endl;
     cout << "根节点得前驱：" << FrontNode(tree.root)->data << endl;
     cout << "根节点得后继：" << NextNode(tree.root)->data << endl;
+    cout << "不含头结点的中序遍历：";
+    Inorder(tree.root);
     return 0;
 }
 
@@ -131,4 +136,10 @@ void inorder(TBNode* r)
     inorder(r->lchild);
     cout << r->data << " ";
     inorder(r->rchild);
+}
+
+void Inorder(TBNode *r)
+{
+    for (TBNode* p = FirstNode(r); p != NULL; p = NextNode(p))
+        cout << p->data << " ";
 }
