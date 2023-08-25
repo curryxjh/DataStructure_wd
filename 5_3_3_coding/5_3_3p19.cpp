@@ -1,6 +1,7 @@
 #include <iostream>
 using namespace std;
 typedef char ElemType;
+const int MaxSize = 110;
 struct TNode
 {
     ElemType data;
@@ -13,12 +14,14 @@ struct Tree
 };
 void BuildTree(TNode *&r);
 int WPL(TNode *&r, int deep);
+int WPL_Sequence(TNode *&r);
 
 int main()
 {
     Tree tree;
     BuildTree(tree.root);
-    cout << "带权路径长度为：" << WPL(tree.root, 0) << endl;
+    cout << "带权路径长度为(先序)：" << WPL(tree.root, 0) << endl;
+    cout << "带权路径长度为(层序)：" << WPL_Sequence(tree.root) << endl;
     return 0;
 }
 
@@ -51,5 +54,38 @@ int WPL(TNode *&r, int deep)
         wpl += WPL(r->lchild, deep + 1);
     if (r->rchild)
         wpl += WPL(r->rchild, deep + 1);
+    return wpl;
+}
+
+int WPL_Sequence(TNode *&r)
+{
+    TNode* q[MaxSize];
+    int hh = 0, tt = 0;
+    int wpl = 0, deep = 0;
+    TNode* lastNode;
+    lastNode = r;
+    TNode *nextLevelLastNode = NULL;
+    q[tt ++] = r;
+    while (hh < tt)
+    {
+        TNode* t = q[hh ++];
+        if (! t->lchild && ! t->rchild)
+            wpl += deep * t->weight;
+        if (t->lchild)
+        {
+            q[tt ++] = t->lchild;
+            nextLevelLastNode = t->lchild;
+        }
+        if (t->rchild)
+        {
+            q[tt ++] = t->rchild;
+            nextLevelLastNode = t->rchild;
+        }
+        if (t == lastNode)
+        {
+            lastNode = nextLevelLastNode;
+            ++ deep;
+        }
+    }
     return wpl;
 }
