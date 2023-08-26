@@ -1,5 +1,5 @@
 /*
- * p04
+ * 05
  */
 #include <iostream>
 using namespace std;
@@ -17,13 +17,13 @@ struct CSTree
 
 void BuildTree(CSNode *&r);
 // ABD#E##C##FG###
-int leaves(CSNode *&r);
+int Height(CSNode *&r);
 
 int main()
 {
     CSTree tree;
     BuildTree(tree.root);
-    cout << "leaves:  " << leaves(tree.root) << endl;
+    cout << "height: " << Height(tree.root) << endl;
     return 0;
 }
 
@@ -46,12 +46,17 @@ void BuildTree(CSNode *&r)
     }
 }
 
-int leaves(CSNode *&r)
+int Height(CSNode *&r)
 {
     if (! r)
         return 0;
-    if (! r->firstchild)
-        return 1 + leaves(r->nextsibling);
-    else if (r->firstchild)
-        return leaves(r->firstchild) + leaves(r->nextsibling);
+    else
+    {
+        int ltree = Height(r->firstchild);
+        int rtree = Height(r->nextsibling);
+        if (ltree + 1 > rtree)
+            return ltree + 1;
+        else
+            return rtree;
+    }
 }
