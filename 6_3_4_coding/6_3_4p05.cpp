@@ -15,37 +15,35 @@ struct LGraph
     int e;
     Enode **a;
 };
+int Stack[N];
+bool visited[N];
+int top = 0;
 bool Init(LGraph *g, int nsize);
 bool Insert(LGraph *g, int u, int v, ElemType w);
 bool Exist(LGraph *g, int u, int v);
-void DFS(LGraph g, int v, bool visited[]);
-bool DFSGraph(LGraph g, int u, int v);
 void BFS(LGraph g, int v, bool visited[]);
 bool BFSGraph(LGraph g, int u, int v);
-
+void DFS(LGraph g, int u, int v);
 
 int main()
 {
     LGraph g;
     Init(&g, 6);
     Insert(&g, 1, 2, 0);
-    Insert(&g, 1, 3, 0);
-    Insert(&g, 2, 4, 0);
-    Insert(&g, 2, 5, 0);
-    Insert(&g, 4, 6, 0);
-    Insert(&g, 6, 4, 0);
-    Insert(&g, 4, 2, 0);
-    Insert(&g, 5, 2, 0);
-    Insert(&g, 3, 1, 0);
     Insert(&g, 2, 1, 0);
-    if (DFSGraph(g, 1, 4))
-        puts("DFS:  YES");
-    else
-        puts("DFS:  NO");
-    if (BFSGraph(g, 1, 4))
-        puts("BFS:  YES");
-    else
-        puts("BFS:  NO");
+    Insert(&g, 2, 3, 0);
+    Insert(&g, 3, 2, 0);
+    Insert(&g, 1, 6, 0);
+    Insert(&g, 6, 1, 0);
+    Insert(&g, 6, 2, 0);
+    Insert(&g, 2, 6, 0);
+    Insert(&g, 5, 6, 0);
+    Insert(&g, 6, 5, 0);
+    Insert(&g, 3, 5, 0);
+    Insert(&g, 5, 3, 0);
+    Insert(&g, 7, 5, 0);
+    Insert(&g, 5, 7, 0);
+    DFS(g, 1, 5);
     return 0;
 }
 
@@ -94,33 +92,23 @@ bool Insert(LGraph *g, int u, int v, ElemType w)
     return true;
 }
 
-void BFS(LGraph g, int v, bool visited[])
+void DFS(LGraph g, int u, int v)
 {
-    Enode *w;
-    int *q = new int[g.n + 1];
-    int hh = 0, tt = -1;
-    q[++ tt] = v;
-    visited[v] = true;
-    while(hh <= tt)
+    if (u == v && !visited[u])
     {
-        int t = q[hh ++];
-        std::cout << t << " ";
-        for (w = g.a[t]; w; w = w->nextArc)
-        {
-            if (! visited[w->adjVEx])
-            {
-                visited[w->adjVEx] = true;
-                q[++ tt] = w->adjVEx;
-            }
-        }
+        for (int i = 1; i <= top; ++ i)
+            std::cout << Stack[i] << " ";
+        std::cout << v << " ";
+        puts("");
+        return ;
     }
-}
-
-bool BFSGraph(LGraph g, int u, int v)
-{
-    bool *visited = new bool[g.n + 1];
-    for (int i = 1; i <= g.n; ++ i)
-        visited[i] = false;
-    BFS(g, u, visited);
-    return visited[v];
+    visited[u] = true;
+    Stack[ ++ top] = u;
+    for (Enode *w = g.a[u]; w; w = w->nextArc)
+    {
+        if (! visited[w->adjVEx])
+            DFS(g, w->adjVEx, v);
+    }
+    visited[u] = false;
+    -- top;
 }
