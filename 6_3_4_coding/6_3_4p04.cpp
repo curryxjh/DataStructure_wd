@@ -16,14 +16,12 @@ struct LGraph
     Enode **a;
 };
 bool Init(LGraph *g, int nsize);
-void Destory(LGraph *g);
 bool Insert(LGraph *g, int u, int v, ElemType w);
 bool Exist(LGraph *g, int u, int v);
-bool Remove(LGraph *g, int u, int v);
 void DFS(LGraph g, int v, bool visited[]);
-void DFSGraph(LGraph g);
+bool DFSGraph(LGraph g, int u, int v);
 void BFS(LGraph g, int v, bool visited[]);
-void BGSGraph(LGraph g);
+bool BFSGraph(LGraph g, int u, int v);
 
 
 int main()
@@ -40,7 +38,14 @@ int main()
     Insert(&g, 5, 2, 0);
     Insert(&g, 3, 1, 0);
     Insert(&g, 2, 1, 0);
-    DFSGraph(g);
+    if (DFSGraph(g, 1, 4))
+        puts("DFS:  YES");
+    else
+        puts("DFS:  NO");
+    if (BFSGraph(g, 1, 4))
+        puts("BFS:  YES");
+    else
+        puts("BFS:  NO");
     return 0;
 }
 
@@ -57,16 +62,6 @@ bool Init(LGraph *g, int nsize)
             g->a[i] = NULL;
         return true;
     }
-}
-
-void Destory(LGraph *g)
-{
-    for (int i = 1; i <= g->n; ++ i)
-    {
-        delete g->a[i];
-        g->a[i] = NULL;
-    }
-    delete []g->a;
 }
 
 bool Exist(LGraph *g, int u, int v)
@@ -99,29 +94,6 @@ bool Insert(LGraph *g, int u, int v, ElemType w)
     return true;
 }
 
-bool Remove(LGraph *g, int u, int v)
-{
-    Enode *p, *q;
-    if (u < 1 || v < 1 || u > g->n || v > g->n || u == v)
-        return false;
-    p = g->a[u];
-    q = NULL;
-    while (p && p->adjVEx != v)
-    {
-        q = p;
-        p = p->nextArc;
-    }
-    if (! p)
-        return false;
-    if (q)
-        q->nextArc = p->nextArc;
-    else
-        g->a[u] = p->nextArc;
-    free(p);
-    -- g->e;
-    return true;
-}
-
 void DFS(LGraph g, int v, bool visited[])
 {
     Enode *w;
@@ -132,16 +104,14 @@ void DFS(LGraph g, int v, bool visited[])
             DFS(g, w->adjVEx, visited);
 }
 
-void DFSGraph(LGraph g)
+bool DFSGraph(LGraph g, int u, int v)
 {
     bool *visited = new bool[g.n + 1];
 //    memset(visited, 0, sizeof  visited);
     for (int i = 1; i <= g.n; ++ i)
         visited[i] = false;
-    for (int i = 1; i <= g.n; ++ i)
-        if (!visited[i])
-            DFS(g, i, visited);
-    delete []visited;
+    DFS(g, u, visited);
+    return visited[v];
 }
 
 void BFS(LGraph g, int v, bool visited[])
@@ -166,13 +136,11 @@ void BFS(LGraph g, int v, bool visited[])
     }
 }
 
-void BGSGraph(LGraph g)
+bool BFSGraph(LGraph g, int u, int v)
 {
     bool *visited = new bool[g.n + 1];
     for (int i = 1; i <= g.n; ++ i)
         visited[i] = false;
-    for (int i = 1; i <= g.n; ++ i)
-        if (! visited[i])
-            BFS(g, i, visited);
-    delete []visited;
+    BFS(g, u, visited);
+    return visited[v];
 }
